@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="查看吴氏数字家族博物馆的累计浏览量、估算访客数与各栏目浏览情况。" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <meta name="referrer" content="no-referrer" />
+  <title>访问统计 · 吴氏数字家族博物馆</title>
+  <link rel="stylesheet" href="assets/dashboard.css?v=20261004" />
+  <script defer src="assets/dashboard.js?v=20261004"></script>
+</head>
+<body class="analytics-page">
+  <a class="analytics-skip" href="#analytics-main">跳到统计内容</a>
+  <header class="analytics-header">
+    <div class="analytics-header-inner">
+      <a class="analytics-brand" href="https://wushizupu-commits.github.io/zongpu/home.html"><span aria-hidden="true">吳</span><strong>吴氏数字家族博物馆</strong></a>
+      <a class="analytics-home" href="https://wushizupu-commits.github.io/zongpu/home.html">返回首页 <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main class="analytics-main" id="analytics-main">
+    <div class="analytics-intro">
+      <p class="analytics-eyebrow">延陵吴氏 · 数字宗谱</p>
+      <h1>访问统计</h1>
+      <p class="analytics-lede">看看有多少人来过，又翻阅了哪些篇章。</p>
+    </div>
+
+    <section class="analytics-overview" aria-label="全站累计访问概览">
+      <div class="analytics-metric">
+        <h2>累计浏览量</h2>
+        <p><strong id="analytics-site-pv">—</strong><span>次</span></p>
+        <small>页面每次打开计为一次浏览</small>
+      </div>
+      <div class="analytics-metric">
+        <h2>估算访客数</h2>
+        <p><strong id="analytics-site-uv">—</strong><span>位</span></p>
+        <small>公共服务估算，不代表精确人数</small>
+      </div>
+    </section>
+
+    <section class="analytics-breakdown" aria-labelledby="analytics-breakdown-title">
+      <div class="analytics-section-heading">
+        <div>
+          <h2 id="analytics-breakdown-title">各栏目浏览情况</h2>
+          <p>纸卷与墨砚两种皮肤合并计数</p>
+        </div>
+        <button type="button" id="analytics-refresh">刷新数据</button>
+      </div>
+      <p class="analytics-status" id="analytics-status" role="status">正在读取访问数据…</p>
+      <div class="analytics-table-wrap">
+        <table class="analytics-table">
+          <caption class="analytics-visually-hidden">七个栏目的累计浏览量和估算访客数</caption>
+          <thead>
+            <tr><th scope="col">栏目</th><th scope="col">累计浏览量</th><th scope="col">估算访客数</th></tr>
+          </thead>
+          <tbody id="analytics-pages"></tbody>
+        </table>
+      </div>
+      <noscript><p class="analytics-noscript">请开启浏览器 JavaScript，以读取访问统计。</p></noscript>
+      <p class="analytics-query-note">打开或刷新本统计页只查询数据，不增加浏览量。</p>
+    </section>
+
+    <details class="analytics-notes">
+      <summary>统计说明与数据使用</summary>
+      <ul>
+        <li>族谱网站于 2026 年 10 月 4 日接入统计，累计数据从接入后开始，无法补录此前的浏览。</li>
+        <li>全站数据按域名合计，可能包含未来在同一域名下接入统计的其他页面。各栏目访客可能重复，不能相加视为总人数。</li>
+        <li>这些是公开的估算数据，不代表精确人数；目前不提供日期趋势、访问来源或停留时间。</li>
+        <li>统计由免费公共服务 <a href="https://busuanzi.9420.ltd/" target="_blank" rel="noopener noreferrer">不蒜子<span class="analytics-visually-hidden">（在新标签页打开）</span> ↗</a> 提供，服务可用性及数据保留不作保证。加载失败时可稍后再试。</li>
+      </ul>
+      <div class="analytics-privacy">
+        <p>本页是无公开入口的个人查看页，没有登录认证；知道链接的人也能打开。搜索引擎收录提示不等于访问权限限制。</p>
+        <p>本页仅以 GET 请求查询七个固定栏目网址的统计，不上报浏览、不读取或保存访客标识。服务仍能接收到查询者的 IP 地址和浏览器信息。</p>
+        <p>族谱网站的计数仅发送归一化后的栏目网址，不发送人物 ID、搜索内容、查询参数或网址锚点；浏览器会保存访客标识用于估算去重。计数尊重“请勿跟踪”（DNT）及全球隐私控制（GPC）信号，本地预览不计数。</p>
+      </div>
+    </details>
+  </main>
+  <footer class="analytics-footer">延陵吴氏宗谱数字档案 · 婺源支</footer>
+</body>
+</html>
