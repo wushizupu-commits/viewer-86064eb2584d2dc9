@@ -9,7 +9,7 @@
 - 0001_analytics.sql 的表、索引、触发器已初始化，不要在现有库重复建表。
 - 宗谱与独立看板的 endpoint 已接通，真实页面、文章、人物搜索验证已入库。
 
-私人查看需要在此 Worker 的 Settings → Runtime variables and secrets 增加 Secret READ_TOKEN，由本人亲自填写保存，再在独立看板输入同一口令。仅用 32–128 位英文字母、数字、短横线、下划线。IP_HASH_SECRET 已作为 Secret 配置，只用于 IP 匿名化，必须保持不变；这两项不得提交 GitHub。READ_TOKEN 不是 Cloudflare 账号 token，只授权读取本项目报表。
+已按所有者要求取消 READ_TOKEN 查看验证，独立看板打开即可读取。知道地址的人也能查看全部报表。IP_HASH_SECRET 仍作为 Secret 配置，只用于 IP 匿名化，必须保持不变，不得提交 GitHub；原 READ_TOKEN 无须删除或公开，代码不再使用它。
 
 使用 Workers/D1 免费方案，没有开启付费升级。D1 免费额度含每日 500 万行读取、10 万行写入和 5GB 总存储，一条事件会写多行，因此不等于每日 10 万事件。额度用尽查询或写入会失败。[官方说明](https://developers.cloudflare.com/d1/platform/pricing/)。
 
@@ -17,7 +17,7 @@
 
 POST /collect 接受 JSON {eventId,kind,page,itemId}，kind 仅 page/article/search，项目 ID 必须命中公开白名单；请求体最多 1KB。服务端生成时间和北京时间日期。搜索只在世系栏目记录选中的公开人物 ID，名称由公开清单解析，不收集原始输入。
 
-GET /stats 使用 Authorization: Bearer READ_TOKEN，返回今日、累计、文章排行、热门人物与最近 30 天最多 20 条搜索。接口只允许共同 GitHub Pages origin；CORS 不能阻止主动构造请求。
+GET /stats 无需 Authorization 或查看密钥，返回今日、累计、文章排行、热门人物与最近 30 天最多 20 条搜索。接口只允许共同 GitHub Pages origin；CORS 不能阻止主动构造请求。
 
 页面加载计 PV，原始 IP 的 HMAC 值做今日和全期 UV 去重。无原始 IP 存储或展示。文章和搜索不增加 PV/UV。单次插入及 SQLite 触发器事务完成防重和聚合；event_receipts 保存 UUID 防止明细清理后重放。
 
