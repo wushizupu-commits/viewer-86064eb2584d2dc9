@@ -1,0 +1,144 @@
+{
+  "pages": [
+    {
+      "id": "home.html",
+      "title": "首页"
+    },
+    {
+      "id": "index.html",
+      "title": "世系族谱"
+    },
+    {
+      "id": "biographies.html",
+      "title": "族贤传略"
+    },
+    {
+      "id": "image_archive.html",
+      "title": "宗族图志"
+    },
+    {
+      "id": "family_customs.html",
+      "title": "家训礼俗"
+    },
+    {
+      "id": "revisions.html",
+      "title": "历代修谱"
+    },
+    {
+      "id": "source_migration.html",
+      "title": "源流迁徙"
+    }
+  ],
+  "articles": [
+    {
+      "id": "bio-1",
+      "title": "國樂公傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-8",
+      "title": "肇修延陵子祥公譜牒文",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-5",
+      "title": "四老颂赞",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-7",
+      "title": "肇修仕珍公譜牒文",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-2",
+      "title": "良榮公行傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-3",
+      "title": "詩明公傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-6",
+      "title": "徐老孺人傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-4",
+      "title": "書森公傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "bio-9",
+      "title": "書有公傳",
+      "page": "biographies.html"
+    },
+    {
+      "id": "guangxu-1895-1",
+      "title": "延陵吳氏肇修歷代譜牒文",
+      "page": "revisions.html"
+    },
+    {
+      "id": "guangxu-1895-2",
+      "title": "延陵吴氏重修宗谱旧序（1895）",
+      "page": "revisions.html"
+    },
+    {
+      "id": "guangxu-1895-3",
+      "title": "重修譜牒凡例（旧）",
+      "page": "revisions.html"
+    },
+    {
+      "id": "minguo-1946-1",
+      "title": "延陵吴氏重修宗谱旧序（1946）",
+      "page": "revisions.html"
+    },
+    {
+      "id": "xinsi-2001-1",
+      "title": "辛巳延陵吳氏續修宗譜序言",
+      "page": "revisions.html"
+    },
+    {
+      "id": "xinsi-2001-2",
+      "title": "新凡例",
+      "page": "revisions.html"
+    },
+    {
+      "id": "xinsi-2001-3",
+      "title": "修谱跋文",
+      "page": "revisions.html"
+    },
+    {
+      "id": "bingwu-2026-1",
+      "title": "丙午延陵吴氏赛博修谱序",
+      "page": "revisions.html"
+    },
+    {
+      "id": "bingwu-2026-2",
+      "title": "丙午延陵吴氏赛博修谱跋文",
+      "page": "revisions.html"
+    },
+    {
+      "id": "appendix-1",
+      "title": "延陵吳氏宗譜續修新譜局芳名",
+      "page": "revisions.html"
+    },
+    {
+      "id": "ancestors",
+      "title": "先祖画像",
+      "page": "image_archive.html"
+    },
+    {
+      "id": "fuxi",
+      "title": "符溪图志",
+      "page": "image_archive.html"
+    },
+    {
+      "id": "tombs",
+      "title": "祖茔图志",
+      "page": "image_archive.html"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "zongpu-private-analytics-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply zongpu-analytics --remote",
+    "catalog": "node scripts/build-catalog.mjs"
+  },
+  "devDependencies": { "wrangler": "4.147.0" }
+}

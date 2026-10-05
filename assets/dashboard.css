@@ -121,3 +121,32 @@
   .analytics-table tbody th { min-width: 82px; }
   .analytics-table thead th:not(:first-child) { white-space: nowrap; }
 }
+.analytics-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.analytics-tabs { display: inline-flex; gap: 4px; padding: 4px; background: #e8dcc9; border-radius: 8px; }
+.analytics-tabs button, .analytics-unlock button { min-height: 44px; padding: 8px 20px; border: 0; border-radius: 5px; color: var(--analytics-accent); background: transparent; font: inherit; cursor: pointer; }
+.analytics-tabs button[aria-selected="true"] { background: var(--analytics-paper); box-shadow: 0 1px 3px #422a1b18; font-weight: 650; }
+.analytics-period-note, .analytics-personal { color: var(--analytics-muted); font-size: 12px; }
+.analytics-overview { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.analytics-metric { padding: 22px 20px; }
+.analytics-recent { padding-left: 22px; }
+.analytics-recent li { padding: 10px 0; border-bottom: 1px solid var(--analytics-line); }
+.analytics-recent time { display: inline-block; margin-left: 20px; color: var(--analytics-muted); font-size: 12px; }
+.analytics-unlock { margin: 20px 0; padding: 20px; border: 1px solid var(--analytics-line); border-radius: 8px; background: var(--analytics-paper); }
+.analytics-unlock[hidden] { display: none; }
+.analytics-unlock > div { display: flex; gap: 10px; margin-top: 8px; }
+.analytics-unlock input { min-width: 0; width: 300px; min-height: 44px; padding: 8px 12px; font: inherit; border: 1px solid var(--analytics-line); border-radius: 5px; background: white; }
+.analytics-unlock button { background: var(--analytics-accent); color: var(--analytics-paper); white-space: nowrap; }
+.analytics-unlock p { margin-bottom: 0; font-size: 12px; color: var(--analytics-muted); }
+.analytics-legacy-summary { display: flex; flex-wrap: wrap; gap: 24px; }
+@media (max-width: 800px) {
+  .analytics-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .analytics-metric:nth-child(3) { border-left: 0; }
+  .analytics-metric:nth-child(n+3) { border-top: 1px solid var(--analytics-line); }
+  .analytics-metric { padding: 18px 14px; }
+}
+@media (max-width: 600px) {
+  .analytics-personal { max-width: 72px; text-align: right; }
+  .analytics-tabs button { padding: 8px 12px; font-size: 13px; }
+  .analytics-recent time { display: block; margin-left: 0; margin-top: 4px; }
+  .analytics-section-heading p { max-width: none; }
+}

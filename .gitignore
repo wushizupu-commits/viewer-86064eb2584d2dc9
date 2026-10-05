@@ -1,0 +1,7 @@
+backend/node_modules/
+backend/.wrangler/
+backend/.dev.vars
+backend/.env*
+backend/wrangler.local.jsonc
+backend/.owner-link.txt
+backend/.local-secrets.json

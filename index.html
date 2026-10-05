@@ -3,78 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="查看吴氏数字家族博物馆的累计浏览量、估算访客数与各栏目浏览情况。" />
+  <meta name="description" content="个人查看族谱浏览、文章打开及人物搜索统计。" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <meta name="referrer" content="no-referrer" />
   <title>访问统计 · 吴氏数字家族博物馆</title>
-  <link rel="stylesheet" href="assets/dashboard.css?v=20261004" />
-  <script defer src="assets/dashboard.js?v=20261004"></script>
+  <link rel="stylesheet" href="assets/dashboard.css?v=20261004-events" />
+  <script defer src="assets/dashboard.js?v=20261004-events"></script>
 </head>
 <body class="analytics-page">
   <a class="analytics-skip" href="#analytics-main">跳到统计内容</a>
   <header class="analytics-header">
-    <div class="analytics-header-inner">
-      <a class="analytics-brand" href="https://wushizupu-commits.github.io/zongpu/home.html"><span aria-hidden="true">吳</span><strong>吴氏数字家族博物馆</strong></a>
-      <a class="analytics-home" href="https://wushizupu-commits.github.io/zongpu/home.html">返回首页 <span aria-hidden="true">↗</span></a>
-    </div>
+    <div class="analytics-header-inner"><div class="analytics-brand"><span aria-hidden="true">吳</span><strong>吴氏数字家族博物馆</strong></div><span class="analytics-personal">个人统计查看页</span></div>
   </header>
-
   <main class="analytics-main" id="analytics-main">
-    <div class="analytics-intro">
-      <p class="analytics-eyebrow">延陵吴氏 · 数字宗谱</p>
-      <h1>访问统计</h1>
-      <p class="analytics-lede">看看有多少人来过，又翻阅了哪些篇章。</p>
+    <div class="analytics-intro"><p class="analytics-eyebrow">延陵吴氏 · 数字宗谱</p><h1>访问统计</h1><p class="analytics-lede">看看有多少次访问，哪些篇章与人物受到关注。</p></div>
+    <div class="analytics-toolbar">
+      <div class="analytics-tabs" role="tablist" aria-label="统计时间范围">
+        <button type="button" id="period-today" role="tab" aria-selected="true" aria-controls="period-panel">今日</button>
+        <button type="button" id="period-all" role="tab" aria-selected="false" aria-controls="period-panel" tabindex="-1">全部累计</button>
+      </div>
+      <button type="button" id="analytics-refresh">刷新数据</button>
     </div>
-
-    <section class="analytics-overview" aria-label="全站累计访问概览">
-      <div class="analytics-metric">
-        <h2>累计浏览量</h2>
-        <p><strong id="analytics-site-pv">—</strong><span>次</span></p>
-        <small>页面每次打开计为一次浏览</small>
-      </div>
-      <div class="analytics-metric">
-        <h2>估算访客数</h2>
-        <p><strong id="analytics-site-uv">—</strong><span>位</span></p>
-        <small>公共服务估算，不代表精确人数</small>
-      </div>
-    </section>
-
-    <section class="analytics-breakdown" aria-labelledby="analytics-breakdown-title">
-      <div class="analytics-section-heading">
-        <div>
-          <h2 id="analytics-breakdown-title">各栏目浏览情况</h2>
-          <p>纸卷与墨砚两种皮肤合并计数</p>
-        </div>
-        <button type="button" id="analytics-refresh">刷新数据</button>
-      </div>
-      <p class="analytics-status" id="analytics-status" role="status">正在读取访问数据…</p>
-      <div class="analytics-table-wrap">
-        <table class="analytics-table">
-          <caption class="analytics-visually-hidden">七个栏目的累计浏览量和估算访客数</caption>
-          <thead>
-            <tr><th scope="col">栏目</th><th scope="col">累计浏览量</th><th scope="col">估算访客数</th></tr>
-          </thead>
-          <tbody id="analytics-pages"></tbody>
-        </table>
-      </div>
-      <noscript><p class="analytics-noscript">请开启浏览器 JavaScript，以读取访问统计。</p></noscript>
-      <p class="analytics-query-note">打开或刷新本统计页只查询数据，不增加浏览量。</p>
-    </section>
-
-    <details class="analytics-notes">
-      <summary>统计说明与数据使用</summary>
-      <ul>
-        <li>族谱网站于 2026 年 10 月 4 日接入统计，累计数据从接入后开始，无法补录此前的浏览。</li>
-        <li>全站数据按域名合计，可能包含未来在同一域名下接入统计的其他页面。各栏目访客可能重复，不能相加视为总人数。</li>
-        <li>这些是公开的估算数据，不代表精确人数；目前不提供日期趋势、访问来源或停留时间。</li>
-        <li>统计由免费公共服务 <a href="https://busuanzi.9420.ltd/" target="_blank" rel="noopener noreferrer">不蒜子<span class="analytics-visually-hidden">（在新标签页打开）</span> ↗</a> 提供，服务可用性及数据保留不作保证。加载失败时可稍后再试。</li>
-      </ul>
-      <div class="analytics-privacy">
-        <p>本页是无公开入口的个人查看页，没有登录认证；知道链接的人也能打开。搜索引擎收录提示不等于访问权限限制。</p>
-        <p>本页仅以 GET 请求查询七个固定栏目网址的统计，不上报浏览、不读取或保存访客标识。服务仍能接收到查询者的 IP 地址和浏览器信息。</p>
-        <p>族谱网站的计数仅发送归一化后的栏目网址，不发送人物 ID、搜索内容、查询参数或网址锚点；浏览器会保存访客标识用于估算去重。计数尊重“请勿跟踪”（DNT）及全球隐私控制（GPC）信号，本地预览不计数。</p>
-      </div>
-    </details>
+    <p class="analytics-status" id="analytics-status" role="status">正在读取统计配置…</p>
+    <form id="analytics-unlock" class="analytics-unlock" hidden>
+      <label for="analytics-read-key">查看密钥</label><div><input id="analytics-read-key" type="password" autocomplete="off" spellcheck="false" maxlength="128" placeholder="输入密钥，临时解锁" /><button type="submit">解锁查看</button></div><p>密钥只在当前标签页的会话内保存，关闭后需重新输入。</p>
+    </form>
+    <div id="period-panel" role="tabpanel" aria-labelledby="period-today">
+      <p class="analytics-period-note" id="analytics-period-note">今日按北京时间（UTC+8）统计。</p>
+      <section class="analytics-overview" aria-label="访问概览">
+        <div class="analytics-metric"><h2 id="analytics-pv-label">浏览量</h2><p><strong id="analytics-site-pv">待开启</strong><span>次</span></p><small>每次打开内容页计一次</small></div>
+        <div class="analytics-metric"><h2 id="analytics-uv-label">独立 IP 数</h2><p><strong id="analytics-site-uv">待开启</strong><span>个</span></p><small id="analytics-uv-note">按 IP 去重，不代表精确人数</small></div>
+        <div class="analytics-metric"><h2>人物搜索选择</h2><p><strong id="analytics-searches">待开启</strong><span>次</span></p><small>点选搜索结果中的人物</small></div>
+        <div class="analytics-metric"><h2>文章与图志打开</h2><p><strong id="analytics-article-opens">待开启</strong><span>次</span></p><small>打开内容，不代表阅读完成</small></div>
+      </section>
+      <section class="analytics-breakdown" aria-labelledby="pages-title"><div class="analytics-section-heading"><div><h2 id="pages-title">各栏目浏览量</h2><p>两种皮肤合并为七个栏目</p></div></div><div class="analytics-table-wrap"><table class="analytics-table"><thead><tr><th scope="col">栏目</th><th scope="col">浏览次数</th></tr></thead><tbody id="analytics-pages"></tbody></table></div></section>
+      <section class="analytics-breakdown" aria-labelledby="articles-title"><div class="analytics-section-heading"><div><h2 id="articles-title">文章与图志打开排行</h2><p>19 篇文章与 3 个图志栏目</p></div></div><div class="analytics-table-wrap"><table class="analytics-table"><thead><tr><th scope="col">篇章</th><th scope="col">打开次数</th></tr></thead><tbody id="analytics-articles"></tbody></table></div></section>
+      <section class="analytics-breakdown" aria-labelledby="searches-title"><div class="analytics-section-heading"><div><h2 id="searches-title">热门被搜人物</h2><p>按搜索结果中的人物被点选次数排序，最多 20 位</p></div></div><div class="analytics-table-wrap"><table class="analytics-table"><thead><tr><th scope="col">人物</th><th scope="col">选择次数</th></tr></thead><tbody id="analytics-top-searches"></tbody></table></div></section>
+    </div>
+    <section class="analytics-breakdown" aria-labelledby="recent-title"><div class="analytics-section-heading"><div><h2 id="recent-title">最近的人物搜索选择</h2><p>最近 20 次；明细保留 30 天，时间为北京时间</p></div></div><ol id="analytics-recent-searches" class="analytics-recent"></ol></section>
+    <details class="analytics-notes analytics-legacy"><summary>原有累计记录</summary><p>从 2026 年 10 月 4 日接入不蒜子后开始累计；这些公共数据仍可被查询。</p><div class="analytics-legacy-summary"><span>浏览量 <strong id="legacy-site-pv">—</strong> 次</span><span>估算访客 <strong id="legacy-site-uv">—</strong> 位</span></div><p class="analytics-status" id="legacy-status">正在读取原有累计…</p><div class="analytics-table-wrap"><table class="analytics-table"><thead><tr><th scope="col">栏目</th><th scope="col">累计浏览量</th><th scope="col">估算访客数</th></tr></thead><tbody id="legacy-pages"></tbody></table></div></details>
+    <details class="analytics-notes"><summary>统计说明</summary><ul><li>今日和搜索、文章明细需启用免费后台，历史记录无法补录。</li><li>增强统计的全部累计从免费后台启用后开始，原有累计另行保留；两套访客数不能直接相加。</li><li>人物搜索只记录点选搜索结果的公开族谱人物；不记录输入框中的原始搜索内容。</li><li>文章打开表示某篇文章或图志被打开，不代表读完；访问统计页本身只查询数据，不增加计数。</li><li>各栏目访客可能重复，不能相加作为全站人数。网络、浏览器隐私设置及公共服务可用性可能影响统计。</li></ul><p>本页没有来自族谱网站的公开入口。隐藏链接不等于访问认证：知道链接的人可打开页面，原有公共累计仍可读；增强统计只有持有查看密钥的人能读取。</p><noscript><p>请开启 JavaScript 以查询统计。</p></noscript></details>
   </main>
   <footer class="analytics-footer">延陵吴氏宗谱数字档案 · 婺源支</footer>
 </body>
