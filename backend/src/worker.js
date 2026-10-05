@@ -74,14 +74,6 @@ async function readEvent(request) {
   return event;
 }
 
-async function sameSecret(supplied, expected) {
-  const hashes = await Promise.all([supplied, expected].map(value => crypto.subtle.digest('SHA-256', encoder.encode(value))));
-  const a = new Uint8Array(hashes[0]), b = new Uint8Array(hashes[1]);
-  let difference = 0;
-  for (let i = 0; i < a.length; i++) difference |= a[i] ^ b[i];
-  return difference === 0;
-}
-
 async function visitorHash(request, env) {
   if (typeof env.IP_HASH_SECRET !== 'string' || env.IP_HASH_SECRET.length < 32) throw new RequestError(503, 'service_unavailable');
   // This is Cloudflare's incoming request header, never a JSON/client event field.
@@ -121,10 +113,6 @@ function summarize(rows) {
 }
 
 async function stats(request, env, now) {
-  if (typeof env.READ_TOKEN !== 'string' || env.READ_TOKEN.length < 32) throw new RequestError(503, 'service_unavailable');
-  const authorization = request.headers.get('Authorization');
-  const token = authorization?.match(/^Bearer ([!-~]{1,4096})$/i)?.[1];
-  if (!token || !(await sameSecret(token, env.READ_TOKEN))) throw new RequestError(401, 'unauthorized');
   const today = shanghaiDate(now);
   const cutoff = new Date(now.getTime() - 30 * DAY_MS).toISOString();
   const results = await env.DB.batch([
