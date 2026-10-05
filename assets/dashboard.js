@@ -4,8 +4,7 @@
   const source = 'https://wushizupu-commits.github.io/zongpu/';
   const legacyEndpoint = 'https://busuanzi.9420.ltd/api';
   const $ = id => document.getElementById(id);
-  const storeKey = 'zongpu-private-read-key';
-  let endpoint = '', catalog, snapshot = null, legacy = null, period = 'today', key = '', busy = false;
+  let endpoint = '', catalog, snapshot = null, legacy = null, period = 'today', busy = false;
   let mode = 'loading', statusMessage = '正在读取统计配置…';
   const number = value => value.toLocaleString('zh-CN');
   const count = value => Number.isSafeInteger(value) && value >= 0;
@@ -19,18 +18,11 @@
         && !url.username && !url.password && !url.port && url.pathname === '/' && !url.search && !url.hash ? url.origin : '';
     } catch { return ''; }
   }
-  function validKey(value) { return typeof value === 'string' && /^[A-Za-z0-9_-]{32,128}$/.test(value); }
-  // Keys never go into query strings, source files, links, or the public count service.
-  const fragment = new URLSearchParams(location.hash.slice(1));
-  if (fragment.has('key')) {
-    const supplied = fragment.get('key');
+  // Remove credentials left by old personal bookmarks; no credential is used now.
+  if (new URLSearchParams(location.hash.slice(1)).has('key')) {
     history.replaceState(null, '', location.pathname + location.search);
-    if (validKey(supplied)) key = supplied;
   }
-  try {
-    if (!key) key = sessionStorage.getItem(storeKey) || '';
-    if (validKey(key)) sessionStorage.setItem(storeKey, key); else key = '';
-  } catch { /* Current page can still unlock without browser storage. */ }
+  try { sessionStorage.removeItem('zongpu-private-read-key'); } catch {}
 
   async function getJson(url, headers = {}) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10000);
@@ -80,9 +72,8 @@
       $('period-' + range).tabIndex = range === period ? 0 : -1;
     }
     $('analytics-status').textContent = statusMessage;
-    $('analytics-unlock').hidden = mode !== 'locked';
     const fallback = !endpoint && !today && legacy;
-    const unavailable = mode === 'disabled' ? '待开启' : mode === 'locked' ? '待解锁' : mode === 'error' ? '暂不可用' : '—';
+    const unavailable = mode === 'disabled' ? '待开启' : mode === 'error' ? '暂不可用' : '—';
     $('analytics-pv-label').textContent = today ? '今日浏览量' : '累计浏览量';
     $('analytics-uv-label').textContent = fallback ? '估算访客数' : '独立 IP 数';
     $('analytics-uv-note').textContent = fallback ? '原公共服务估算，不代表精确人数' : '按 IP 去重，不代表精确人数';
@@ -136,14 +127,13 @@
   async function readEnhanced() {
     snapshot = null;
     if (!endpoint) { mode = 'disabled'; statusMessage = '今日、文章和搜索明细待开启：还需登录 Cloudflare 启用免费后台。原有累计仍可查询。'; return; }
-    if (!key) { mode = 'locked'; statusMessage = '请输入查看密钥，或使用带密钥的个人收藏链接。'; return; }
     try {
-      const value = await getJson(endpoint + '/stats', { Authorization: 'Bearer ' + key });
+      const value = await getJson(endpoint + '/stats');
       if (!validateReport(value)) throw Error('invalid_report');
       snapshot = value; mode = 'ready'; statusMessage = '更新于 ' + formatTime(value.updatedAt) + '（北京时间）；本页只查询，不增加计数。';
     } catch (error) {
-      mode = error.status === 401 ? 'locked' : 'error';
-      statusMessage = error.status === 401 ? '查看密钥无效，请重新输入。' : '明细暂时无法查询，可稍后刷新；未将失败显示为零。';
+      mode = 'error';
+      statusMessage = '明细暂时无法查询，可稍后刷新；未将失败显示为零。';
     }
   }
   async function update() {
@@ -163,15 +153,10 @@
     });
   }
   $('analytics-refresh').addEventListener('click', update);
-  $('analytics-unlock').addEventListener('submit', event => {
-    event.preventDefault(); const supplied = $('analytics-read-key').value; $('analytics-read-key').value = '';
-    if (!validKey(supplied)) { statusMessage = '请输入有效的查看密钥。'; render(); return; }
-    key = supplied; try { sessionStorage.setItem(storeKey, key); } catch {} update();
-  });
   if (location.protocol === 'file:') { $('analytics-refresh').disabled = true; $('analytics-status').textContent = '请通过 HTTP 或 HTTPS 打开统计页。'; return; }
   Promise.all([
-    getJson(new URL('analytics-config.json?v=20261004-events', assetUrl).href),
-    getJson(new URL('report-catalog.json?v=20261004-events', assetUrl).href)
+    getJson(new URL('analytics-config.json?v=20261005-open', assetUrl).href),
+    getJson(new URL('report-catalog.json?v=20261005-open', assetUrl).href)
   ]).then(([config, list]) => {
     if (!Array.isArray(list?.pages) || list.pages.length !== 7 || !Array.isArray(list.articles) || list.articles.length !== 22
       || !list.pages.every(row => /^(home|index|biographies|image_archive|family_customs|revisions|source_migration)\.html$/.test(row.id) && typeof row.title === 'string')
