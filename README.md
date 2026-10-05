@@ -2,11 +2,11 @@
 
 独立查看地址：https://wushizupu-commits.github.io/viewer-86064eb2584d2dc9/
 
-宗谱网站不放本页入口。隐藏地址不等于认证；本页带 noindex/nofollow/noarchive，新增报表必须持有本人查看密钥。原不蒜子累计仍是公开数据。
+宗谱网站不放本页入口。隐藏地址不等于认证；本页带 noindex/nofollow/noarchive，知道地址的人可直接查看全部统计报表。原不蒜子累计仍是公开数据。
 
 ## 部署状态
 
-2026-10-05 已在 Cloudflare 免费方案创建并部署 Worker、D1 数据库和统计规则；两个仓库的 assets/analytics-config.json 已接通 https://zongpu-private-analytics.wurenzhe911.workers.dev。真实访问验证已记录页面、文章和人物搜索。私人查看需在 Worker Secrets 配置 READ_TOKEN，随后在看板输入同一密钥。
+2026-10-05 已在 Cloudflare 免费方案创建并部署 Worker、D1 数据库和统计规则；两个仓库的 assets/analytics-config.json 已接通 https://zongpu-private-analytics.wurenzhe911.workers.dev。真实访问验证已记录页面、文章和人物搜索。已按所有者要求取消查看密钥验证，打开独立看板即可读取统计。
 
 ## 可以查看
 
@@ -25,16 +25,16 @@
 
 主站沿用 DNT/GPC 跳过和跳转页去重，网络失败不自动重试。机器人和主动伪造事件可能影响数字。本看板仅 GET 查询，不增加宗谱计数。
 
-## 私人查看
+## 直接查看
 
-READ_TOKEN（本人查看口令）与 IP_HASH_SECRET（IP 匿名化参数）只放 Cloudflare Secrets，不提交 GitHub。READ_TOKEN 用 32–128 位英文字母、数字、下划线或短横线。保持 IP_HASH_SECRET 不变以维持 IP 去重。
+看板与 GET /stats 无需查看密钥。知道地址的人可查看今日、累计、文章排行和人物搜索记录；隐藏地址和 noindex 不构成访问认证。主站不放统计页入口。
 
-可在页面临时输入查看口令，也可个人收藏“本页地址#key=查看口令”。页面读取片段后立即移除地址栏口令，仅在当前标签页 sessionStorage 保存，并只向配置的 HTTPS workers.dev 报表接口发送。请勿公开分享带口令的链接。
+IP_HASH_SECRET（IP 匿名化参数）仍只放 Cloudflare Secrets，保持不变以维持 IP 去重，不得提交 GitHub。原 READ_TOKEN 不再用于报表读取，不需要公开或嵌入页面。旧收藏链接中的 #key 片段和浏览器旧密钥副本会被清除。
 
 ## 文件与验证
 
 index.html、assets/dashboard.css、assets/dashboard.js 是看板；assets/report-catalog.json 是栏目和文章清单；assets/analytics-config.json 是公开服务地址；backend/ 包含统计服务、数据库结构、公开人物白名单和维护说明。
 
-Node 24+ 验证：`node --test tests/*.cjs backend/tests/*.test.js`。模拟网络与本地 SQLite 测试覆盖北京时间边界、IP 去重、事件防重、文章搜索不污染 PV、读取认证和不可用状态，不写入线上计数。
+Node 24+ 验证：`node --test tests/*.cjs backend/tests/*.test.js`。模拟网络与本地 SQLite 测试覆盖北京时间边界、IP 去重、事件防重、文章搜索不污染 PV、无需密钥读取和不可用状态，不写入线上计数。
 
 维护与重新部署见 [后台说明](backend/README.md)。
