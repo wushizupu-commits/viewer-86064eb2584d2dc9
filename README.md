@@ -1,50 +1,40 @@
 # 宗谱访问统计
 
-这是独立于族谱网站的个人统计查看页：
+独立查看地址：https://wushizupu-commits.github.io/viewer-86064eb2584d2dc9/
 
-https://wushizupu-commits.github.io/viewer-86064eb2584d2dc9/
+宗谱网站不放本页入口。隐藏地址不等于认证；本页带 noindex/nofollow/noarchive，新增报表必须持有本人查看密钥。原不蒜子累计仍是公开数据。
 
-族谱网站不放入口，也不提供本项目链接。页面带 noindex/nofollow/noarchive；`robots.txt` 在项目子目录下，不能代替域名根目录的爬虫控制。隐藏地址本身不是身份认证。原不蒜子计数仍是公开数据；新增后台报表需要本人查看密钥。
+## 部署状态
 
-## 已接入与待启用
+2026-10-05 已在 Cloudflare 免费方案创建并部署 Worker、D1 数据库和统计规则；两个仓库的 assets/analytics-config.json 已接通 https://zongpu-private-analytics.wurenzhe911.workers.dev。真实访问验证已记录页面、文章和人物搜索。私人查看需在 Worker Secrets 配置 READ_TOKEN，随后在看板输入同一密钥。
 
-- 原有累计浏览量、估算访客数和七个栏目计数继续通过免费公共不蒜子 API 查询。
-- 看板提供“今日 / 全部累计”切换。今日按北京时间零点划分；免费后台尚未启用时明确显示“待开启”，不能从累计值推算出今日数据。
-- `backend/` 提供 Cloudflare Worker + D1：每日与全部累计 PV、独立 IP 数、22 项文章/图志打开计数、热门被搜人物及最近 20 次姓名搜索选择。
-- 宗谱采集端与本页的 `assets/analytics-config.json` 均默认 `{ "endpoint": "" }`。部署后台并填入同一个 Worker 地址后才开始新增记录，历史明细不能补录。
-- 新增全部累计从后台实际启用后开始；旧累计保留在“原有累计记录”中。两个系统的访客口径不同，不能相加。
+## 可以查看
 
-## 数据口径
+- 今日与全部累计浏览量、独立 IP 数；今日按北京时间零点划分。
+- 两种皮肤合并后的七个栏目访问量。
+- 19 篇文章、3 个图志栏目的打开排行。
+- 热门被搜人物及最近 30 天内最多 20 次人物搜索选择。
 
-页面加载一次增加一次 PV；文章面板实际切换或首次打开计一次，重复点击当前篇章不增加。人物搜索仅记录点击或回车选中的公开族谱节点 ID，不收集逐字输入或没有匹配的搜索文字。文章打开、搜索选择不增加页面 PV。
+新增累计从 2026-10-05 后台启用后开始；历史明细不能补录。旧计数保留在“原有累计记录”，两套访客数不能相加。
 
-后台用服务端北京时间给事件归日，并以带密钥的 IP 哈希做每日和全期去重，不保存或展示原始 IP。独立 IP 数并不等于精确人数。所有人共用的网络出口可能合并，IP 变化可能增加数量。
+## 统计口径
 
-事件详细记录保留 30 天，定时清理后每日/累计计数和去重结果继续保留；看板最近列表最多 20 条。DNT/GPC 与跳转页跳过策略沿用主站设置；网络失败不自动重试。服务未识别出的机器人和主动伪造的事件可能影响数字。
+页面加载计一次 PV。文章首次显示或实际切换计一次，重复点击当前文章不增加。搜索只记录点击或回车选中的公开人物节点 ID，不记录原始输入文字。文章与搜索不增加 PV/UV。后台使用带密钥的 IP 哈希做今日与全部去重，不保存或展示原始 IP；共享网络可能合并访客，IP 改变可能增加访客，因此独立 IP 数不等于精确人数。
 
-## 启用后台
+当前未开启明细定时删除；最近列表仅查询最近 30 天，累计数字和每日计数保留。后台预留可选清理函数，若另行启用会删除 30 天前的明细，但保留聚合和去重结果。服务商免费额度及数据保存不作永久保证。
 
-参见 [后台部署说明](backend/README.md)。需要本人 Cloudflare 免费账号与一次部署授权；使用 Workers/D1 免费方案，不开启付费升级。Cloudflare Web Analytics 的普通 beacon 不支持本项目需要的姓名/文章事件，因此不是只粘贴 Web Analytics token。
+主站沿用 DNT/GPC 跳过和跳转页去重，网络失败不自动重试。机器人和主动伪造事件可能影响数字。本看板仅 GET 查询，不增加宗谱计数。
 
-部署后配置中只放公开 Worker 地址。`READ_TOKEN`、`IP_HASH_SECRET` 只放 Cloudflare Secrets，不得提交到 GitHub。使用个人收藏链接 `本页地址#key=查看密钥` 时，页面读取后立即移除地址栏密钥，并仅在当前标签页的 sessionStorage 保存；密钥只发往配置中指定的 HTTPS workers.dev 报表接口。也可以通过页面的密钥输入框临时解锁。
+## 私人查看
 
-页面查询全部为 GET，不调用事件接口、不增加族谱的访问量。主站不应引用本看板脚本。
+READ_TOKEN（本人查看口令）与 IP_HASH_SECRET（IP 匿名化参数）只放 Cloudflare Secrets，不提交 GitHub。READ_TOKEN 用 32–128 位英文字母、数字、下划线或短横线。保持 IP_HASH_SECRET 不变以维持 IP 去重。
 
-## 文件
+可在页面临时输入查看口令，也可个人收藏“本页地址#key=查看口令”。页面读取片段后立即移除地址栏口令，仅在当前标签页 sessionStorage 保存，并只向配置的 HTTPS workers.dev 报表接口发送。请勿公开分享带口令的链接。
 
-- `index.html`、`assets/dashboard.css`、`assets/dashboard.js`：看板界面、查询、切换与解锁。
-- `assets/report-catalog.json`：七个栏目与 22 个文章/图志项目的公开清单。
-- `assets/analytics-config.json`：公开后台地址，默认为空。
-- `backend/`：事件接口、受保护的统计接口、数据库结构与公开人物 ID 白名单。
+## 文件与验证
 
-## 验证
+index.html、assets/dashboard.css、assets/dashboard.js 是看板；assets/report-catalog.json 是栏目和文章清单；assets/analytics-config.json 是公开服务地址；backend/ 包含统计服务、数据库结构、公开人物白名单和维护说明。
 
-Node.js 24 或更高版本：
+Node 24+ 验证：`node --test tests/*.cjs backend/tests/*.test.js`。模拟网络与本地 SQLite 测试覆盖北京时间边界、IP 去重、事件防重、文章搜索不污染 PV、读取认证和不可用状态，不写入线上计数。
 
-```
-node --test tests/*.cjs backend/tests/*.test.js
-```
-
-测试使用模拟网络与本地 SQLite，不增加线上计数。包括北京时间日界线、每日/累计 IP 去重、文章/搜索不污染 PV、重复事件、明细清理后保留累计、读取认证及看板未启用/不可用状态。
-
-免费额度与数据完整性取决于服务提供方，不作永久保存保证。
+维护与重新部署见 [后台说明](backend/README.md)。
