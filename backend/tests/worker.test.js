@@ -20,7 +20,7 @@ function request(path, opts = {}) {
   return new Request('https://test.example.workers.dev' + path, {
     method: opts.kind ? 'POST' : opts.method || 'GET',
     headers: { Origin: origin, 'CF-Connecting-IP': opts.ip || '203.0.113.5',
-      ...(opts.kind ? { 'Content-Type': 'application/json' } : { Authorization: 'Bearer ' + token }), ...opts.headers },
+      ...(opts.kind ? { 'Content-Type': 'application/json' } : {}), ...opts.headers },
     ...(opts.kind ? { body: JSON.stringify({ eventId: opts.id || crypto.randomUUID(), kind: opts.kind, page: opts.page || 'index.html', itemId: opts.itemId || '', ...opts.fields }) } : {})
   });
 }
@@ -67,9 +67,11 @@ test('cleanup removes details but preserves all totals, date totals and replay p
   env.sql.close();
 });
 
-test('read authorization, restricted origin, CORS and invalid inputs do not write data', async () => {
+test('stats need no token; restricted origin, CORS and invalid inputs do not write data', async () => {
   const env = environment();
-  assert.equal((await handleRequest(request('/stats', { headers: { Authorization: 'Bearer wrong' } }), env)).status, 401);
+  delete env.READ_TOKEN;
+  assert.equal((await handleRequest(request('/stats'), env)).status, 200);
+  assert.equal((await handleRequest(request('/stats', { headers: { Authorization: 'Bearer old-unused-key' } }), env)).status, 200);
   assert.equal((await handleRequest(request('/stats', { headers: { Origin: 'https://evil.example' } }), env)).status, 403);
   assert.equal((await handleRequest(request('/stats?key=secret'), env)).status, 400);
   const preflight = await handleRequest(request('/collect', { method: 'OPTIONS', headers: { 'Access-Control-Request-Method': 'POST', 'Access-Control-Request-Headers': 'content-type' } }), env);
