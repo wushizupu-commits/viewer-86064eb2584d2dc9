@@ -2,16 +2,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zongpu-private-analytics",
   "main": "src/worker.js",
-  "compatibility_date": "2026-10-04",
+  "compatibility_date": "2026-10-05",
   "workers_dev": true,
-  "observability": { "enabled": false },
+  "observability": { "enabled": true },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "zongpu-analytics",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "e256c21e-c640-4460-8a1e-13cd5b850fa0",
       "migrations_dir": "migrations"
     }
   ],
-  "triggers": { "crons": ["15 19 * * *"] }
+  "triggers": { "crons": [] }
 }
