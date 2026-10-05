@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const code = fs.readFileSync(path.join(root, 'assets/dashboard.js'), 'utf8');
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'assets/report-catalog.json')));
-const endpoint = 'https://private.example.workers.dev';
+const endpoint = 'https://analytics.example.workers.dev';
 const token = 'owner-secret-'.padEnd(48, 'a');
 class Element {
   constructor() { this.children = []; this.textContent = ''; this.events = {}; this.attributes = {}; this.disabled = false; this.hidden = false; }
@@ -31,7 +31,7 @@ function environment(options = {}) {
     URL, URLSearchParams, AbortController, Date, setTimeout, clearTimeout, setInterval() {},
     location: new URL('https://wushizupu-commits.github.io/viewer-86064eb2584d2dc9/' + (options.key ? '#key=' + options.key : '')),
     history: { replaceState(_a, _b, url) { removed = url; } },
-    sessionStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) },
+    sessionStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
     document: { currentScript: { src: 'https://wushizupu-commits.github.io/viewer-86064eb2584d2dc9/assets/dashboard.js' },
       getElementById: get, createElement: () => new Element(), querySelector: () => get('legacy-details') },
     fetch: async (url, init) => {
@@ -59,26 +59,31 @@ test('disabled backend keeps actual legacy cumulative data and marks today/detai
   assert.ok(e.get('analytics-status').textContent.includes('Cloudflare'));
 });
 
-test('private key is stripped from fragment, held in session, only sent to protected stats read', async () => {
-  const e = environment({ endpoint, key: token }); await settle();
-  assert.equal(e.removed(), '/viewer-86064eb2584d2dc9/'); assert.equal(e.storage.get('zongpu-private-read-key'), token);
+test('open dashboard loads today and all reports without a key or authentication headers', async () => {
+  const e = environment({ endpoint }); await settle();
   const enhanced = e.calls.filter(call => call.url.endsWith('/stats'));
-  assert.equal(enhanced.length, 1); assert.equal(enhanced[0].headers.Authorization, 'Bearer ' + token);
-  assert.ok(e.calls.every(call => !call.url.includes(token) && call.method === 'GET' && call.referrerPolicy === 'no-referrer' && call.credentials === 'omit'));
-  assert.ok(e.calls.filter(call => !call.url.endsWith('/stats')).every(call => !call.headers.Authorization));
+  assert.equal(enhanced.length, 1);
+  assert.ok(e.calls.every(call => !call.headers.Authorization && call.method === 'GET' && call.referrerPolicy === 'no-referrer' && call.credentials === 'omit'));
   assert.equal(e.get('analytics-site-pv').textContent, '5');
   e.get('period-all').events.click(); assert.equal(e.get('analytics-site-pv').textContent, '12');
   assert.equal(e.get('analytics-articles').children.length, 22);
   assert.equal(e.get('analytics-top-searches').children.length, 1); assert.equal(e.get('analytics-recent-searches').children.length, 1);
+  assert.ok(!e.elements.has('analytics-unlock'));
 });
 
-test('missing key, invalid key and service failures are not shown as zero, and disclose no search data', async () => {
-  const locked = environment({ endpoint }); await settle();
-  assert.equal(locked.get('analytics-site-pv').textContent, '待解锁'); assert.equal(locked.get('analytics-unlock').hidden, false);
-  assert.equal(locked.calls.filter(call => call.url.endsWith('/stats')).length, 0);
+test('old key bookmarks are cleaned without transmitting or retaining the credential', async () => {
+  const e = environment({ endpoint, key: token }); await settle();
+  assert.equal(e.removed(), '/viewer-86064eb2584d2dc9/');
+  assert.equal(e.storage.size, 0);
+  assert.ok(e.calls.every(call => !call.url.includes(token) && !call.headers.Authorization));
+  assert.equal(e.get('analytics-site-pv').textContent, '5');
+});
+
+test('unavailable service never appears as zero and requires no unlock prompt', async () => {
   for (const status of [401, 503]) {
-    const e = environment({ endpoint, key: token, status }); await settle();
-    assert.equal(e.get('analytics-site-pv').textContent, status === 401 ? '待解锁' : '暂不可用');
+    const e = environment({ endpoint, status }); await settle();
+    assert.equal(e.get('analytics-site-pv').textContent, '暂不可用');
+    assert.ok(!e.elements.has('analytics-unlock'));
     assert.equal(e.get('analytics-recent-searches').children.length, 1);
   }
 });
@@ -94,7 +99,7 @@ test('invalid report and counts are rejected; names are rendered as text without
   assert.equal(link.href, 'https://wushizupu-commits.github.io/zongpu/index.html?person=G01-001');
 });
 
-test('only configured HTTPS Worker origins can receive private key', async () => {
+test('only configured HTTPS Worker origins can receive report requests', async () => {
   for (const endpoint of ['https://evil.example', 'http://safe.workers.dev', 'https://safe.workers.dev/path', 'https://safe.workers.dev/?key=x']) {
     const e = environment({ endpoint, key: token }); await settle();
     assert.equal(e.calls.filter(call => call.url.endsWith('/stats')).length, 0);
