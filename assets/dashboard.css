@@ -150,3 +150,5 @@
   .analytics-recent time { display: block; margin-left: 0; margin-top: 4px; }
   .analytics-section-heading p { max-width: none; }
 }
+
+.analytics-overview.analytics-video { grid-template-columns: 1fr; margin-top: 20px; }

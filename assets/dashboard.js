@@ -37,7 +37,7 @@
       || !timestamp(report.updatedAt) || (report.startedAt !== null && !timestamp(report.startedAt))) return false;
     for (const range of ['today', 'all']) {
       const data = report.periods?.[range];
-      if (!data || !['pv', 'uv', 'searches', 'articleOpens'].every(field => count(data[field]))
+      if (!data || !['pv', 'uv', 'searches', 'articleOpens', 'videoClicks'].every(field => count(data[field]))
         || !Array.isArray(data.pages) || data.pages.length !== 7 || !Array.isArray(data.articles) || data.articles.length !== 22
         || !Array.isArray(data.topSearches) || data.topSearches.length > 20) return false;
       if (new Set(data.pages.map(row => row?.id)).size !== 7 || new Set(data.articles.map(row => row?.id)).size !== 22) return false;
@@ -79,6 +79,7 @@
     $('analytics-uv-note').textContent = fallback ? '原公共服务估算，不代表精确人数' : '按 IP 去重，不代表精确人数';
     $('analytics-site-pv').textContent = data ? number(data.pv) : fallback ? number(legacy.pv) : unavailable;
     $('analytics-site-uv').textContent = data ? number(data.uv) : fallback ? number(legacy.uv) : unavailable;
+    $('analytics-video-clicks').textContent = data ? number(data.videoClicks) : unavailable;
     $('analytics-searches').textContent = data ? number(data.searches) : unavailable;
     $('analytics-article-opens').textContent = data ? number(data.articleOpens) : unavailable;
     $('analytics-period-note').textContent = data

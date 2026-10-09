@@ -38,3 +38,6 @@ index.html、assets/dashboard.css、assets/dashboard.js 是看板；assets/repor
 Node 24+ 验证：`node --test tests/*.cjs backend/tests/*.test.js`。模拟网络与本地 SQLite 测试覆盖北京时间边界、IP 去重、事件防重、文章搜索不污染 PV、无需密钥读取和不可用状态，不写入线上计数。
 
 维护与重新部署见 [后台说明](backend/README.md)。
+
+
+介绍视频点击次数支持今日和累计，仅记录线上网站打开视频播放器的次数；暂停、继续和重试不计。既往点击无法补录。

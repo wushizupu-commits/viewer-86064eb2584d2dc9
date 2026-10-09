@@ -116,3 +116,16 @@ test('all catalogs are bounded, exact public IDs; collecting every article never
   assert.equal(recent.recentSearches.length, 20); assert.equal(recent.periods.all.topSearches.length, 20);
   env.sql.close();
 });
+
+ test('video deduplicates and rolls over at Beijing midnight without changing articles, PV, UV or searches',async()=>{
+   const env=environment(),before=new Date('2026-10-09T15:59:59.000Z'),after=new Date('2026-10-09T16:00:00.000Z'),id=crypto.randomUUID();
+   for(const now of [before, before, after])assert.equal((await handleRequest(request('/collect',{kind:'video',page:'home.html',itemId:'family-introduction',id}),env,now)).status,204);
+   let data=await report(env,after);assert.equal(data.periods.today.videoClicks,0);assert.equal(data.periods.all.videoClicks,1);
+   await handleRequest(request('/collect',{kind:'video',page:'home.html',itemId:'family-introduction'}),env,after);
+   await handleRequest(request('/collect',{kind:'article',page:'biographies.html',itemId:'bio-1'}),env,after);
+   data=await report(env,after);assert.equal(data.periods.today.videoClicks,1);assert.equal(data.periods.all.videoClicks,2);
+   assert.deepEqual([data.periods.all.articleOpens,data.periods.all.pv,data.periods.all.uv,data.periods.all.searches],[1,0,0,0]);
+   assert.equal(data.periods.all.articles.length,22);
+   for(const event of [{kind:'video',page:'index.html',itemId:'family-introduction'},{kind:'video',page:'home.html',itemId:'unknown'},{kind:'article',page:'home.html',itemId:'video:family-introduction'}])assert.equal((await handleRequest(request('/collect',event),env,after)).status,400);
+   await cleanup(env,new Date('2026-12-01T00:00:00.000Z'));data=await report(env,after);assert.equal(data.periods.all.videoClicks,2);env.sql.close();
+ });

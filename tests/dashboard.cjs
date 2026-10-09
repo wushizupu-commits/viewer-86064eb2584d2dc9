@@ -17,7 +17,7 @@ class Element {
   focus() { this.focused = true; }
 }
 function sample() {
-  const range = pv => ({ pv, uv: 2, searches: 1, articleOpens: 3,
+  const range = pv => ({ pv, uv: 2, searches: 1, articleOpens: 3, videoClicks: pv === 5 ? 2 : 8,
     pages: catalog.pages.map(row => ({ ...row, pv: row.id === 'home.html' ? pv : 0 })),
     articles: catalog.articles.map(row => ({ ...row, opens: row.id === 'bio-1' ? 3 : 0 })),
     topSearches: [{ id: 'G01-001', name: '洵公', count: 1, lastAt: '2026-10-04T17:00:00.000Z' }] });
@@ -65,7 +65,8 @@ test('open dashboard loads today and all reports without a key or authentication
   assert.equal(enhanced.length, 1);
   assert.ok(e.calls.every(call => !call.headers.Authorization && call.method === 'GET' && call.referrerPolicy === 'no-referrer' && call.credentials === 'omit'));
   assert.equal(e.get('analytics-site-pv').textContent, '5');
-  e.get('period-all').events.click(); assert.equal(e.get('analytics-site-pv').textContent, '12');
+  assert.equal(e.get('analytics-video-clicks').textContent, '2');
+  e.get('period-all').events.click(); assert.equal(e.get('analytics-site-pv').textContent, '12'); assert.equal(e.get('analytics-video-clicks').textContent, '8');
   assert.equal(e.get('analytics-articles').children.length, 22);
   assert.equal(e.get('analytics-top-searches').children.length, 1); assert.equal(e.get('analytics-recent-searches').children.length, 1);
   assert.ok(!e.elements.has('analytics-unlock'));

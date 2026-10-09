@@ -32,3 +32,6 @@ GET /stats 无需 Authorization 或查看密钥，返回今日、累计、文章
 Node 24+ 测试：node --test tests/*.test.js。测试使用本地 SQLite 和模拟请求，不依赖账号，不写生产计数。npm run dev 可本地预览；.dev.vars 只能放测试密钥，不得上传。
 
 人物清单由主站 assets/zongpu-data.js 提取，仅含公开 ID/姓名。更新族谱后可运行 npm run catalog -- /path/to/zongpu/assets/zongpu-data.js。文章变动先更新 ../assets/report-catalog.json，再重建后台清单。
+
+
+视频以 video/family-introduction 接收，复用现有 schema 的 article/video:family-introduction 保留项存储；文章总数和排行排除此项，无需迁移数据库。今日按北京时间，重复 eventId 不再累计。

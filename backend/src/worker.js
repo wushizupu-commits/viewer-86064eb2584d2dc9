@@ -3,6 +3,8 @@ import catalog from './catalog.json' with { type: 'json' };
 const ORIGIN = 'https://wushizupu-commits.github.io';
 const MAX_BODY_BYTES = 1024;
 const DAY_MS = 86400000;
+// Reserved metric in the existing schema; excluded from article totals and rankings.
+const VIDEO_METRIC = 'video:family-introduction';
 const pageById = new Map(catalog.pages.map(item => [item.id, item]));
 const articleById = new Map(catalog.articles.map(item => [item.id, item]));
 const personById = new Map(catalog.people.map(item => [item.id, item]));
@@ -67,6 +69,8 @@ async function readEvent(request) {
     if (event.itemId !== '') throw new RequestError(400, 'invalid_event');
   } else if (event.kind === 'article') {
     if (articleById.get(event.itemId)?.page !== event.page) throw new RequestError(400, 'invalid_event');
+  } else if (event.kind === 'video') {
+    if (event.page !== 'home.html' || event.itemId !== 'family-introduction') throw new RequestError(400, 'invalid_event');
   } else if (event.kind === 'search') {
     if (event.page !== 'index.html' || !personById.has(event.itemId)) throw new RequestError(400, 'invalid_event');
   } else throw new RequestError(400, 'invalid_event');
@@ -89,12 +93,14 @@ async function collect(request, env, now) {
   if (request.cf?.botManagement?.verifiedBot === true) return respond(204);
   const visitor = event.kind === 'page' ? await visitorHash(request, env) : null;
   const at = now.toISOString();
+  const storedKind = event.kind === 'video' ? 'article' : event.kind;
+  const storedItem = event.kind === 'video' ? VIDEO_METRIC : event.itemId;
   // A single statement + trigger is atomic. Receipt survives deletion of event details.
   await env.DB.prepare(`INSERT INTO events(event_id, kind, page, item_id, period, at, visitor)
     SELECT ?, ?, ?, ?, ?, ?, ?
     WHERE NOT EXISTS (SELECT 1 FROM event_receipts WHERE event_id = ?)
     ON CONFLICT(event_id) DO NOTHING`)
-    .bind(event.eventId, event.kind, event.page, event.itemId, shanghaiDate(now), at, visitor, event.eventId).run();
+    .bind(event.eventId, storedKind, event.page, storedItem, shanghaiDate(now), at, visitor, event.eventId).run();
   return respond(204);
 }
 
@@ -105,7 +111,7 @@ function summarize(rows) {
     .sort((a, b) => b.count - a.count || b.last_at.localeCompare(a.last_at) || a.item_id.localeCompare(b.item_id))
     .slice(0, 20).map(row => ({ id: row.item_id, name: personById.get(row.item_id).name, count: row.count, lastAt: row.last_at }));
   return {
-    pv: sum('page'), uv: count('visitor', ''), searches: sum('search'), articleOpens: sum('article'),
+    pv: sum('page'), uv: count('visitor', ''), searches: sum('search'), articleOpens: sum('article') - count('article', VIDEO_METRIC), videoClicks: count('article', VIDEO_METRIC),
     pages: catalog.pages.map(page => ({ ...page, pv: count('page', page.id) })),
     articles: catalog.articles.map(article => ({ ...article, opens: count('article', article.id) })),
     topSearches
