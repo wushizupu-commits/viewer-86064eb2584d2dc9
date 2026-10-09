@@ -70,7 +70,7 @@ async function readEvent(request) {
   } else if (event.kind === 'article') {
     if (articleById.get(event.itemId)?.page !== event.page) throw new RequestError(400, 'invalid_event');
   } else if (event.kind === 'video') {
-    if (event.page !== 'home.html' || event.itemId !== 'family-introduction') throw new RequestError(400, 'invalid_event');
+    if (!['home.html','index.html'].includes(event.page) || event.itemId !== 'family-introduction') throw new RequestError(400, 'invalid_event');
   } else if (event.kind === 'search') {
     if (event.page !== 'index.html' || !personById.has(event.itemId)) throw new RequestError(400, 'invalid_event');
   } else throw new RequestError(400, 'invalid_event');

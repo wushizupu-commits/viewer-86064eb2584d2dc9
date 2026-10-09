@@ -126,6 +126,8 @@ test('all catalogs are bounded, exact public IDs; collecting every article never
    data=await report(env,after);assert.equal(data.periods.today.videoClicks,1);assert.equal(data.periods.all.videoClicks,2);
    assert.deepEqual([data.periods.all.articleOpens,data.periods.all.pv,data.periods.all.uv,data.periods.all.searches],[1,0,0,0]);
    assert.equal(data.periods.all.articles.length,22);
-   for(const event of [{kind:'video',page:'index.html',itemId:'family-introduction'},{kind:'video',page:'home.html',itemId:'unknown'},{kind:'article',page:'home.html',itemId:'video:family-introduction'}])assert.equal((await handleRequest(request('/collect',event),env,after)).status,400);
-   await cleanup(env,new Date('2026-12-01T00:00:00.000Z'));data=await report(env,after);assert.equal(data.periods.all.videoClicks,2);env.sql.close();
+   assert.equal((await handleRequest(request('/collect',{kind:'video',page:'index.html',itemId:'family-introduction'}),env,after)).status,204);
+   data=await report(env,after);assert.equal(data.periods.all.videoClicks,3);
+   for(const event of [{kind:'video',page:'biographies.html',itemId:'family-introduction'},{kind:'video',page:'home.html',itemId:'unknown'},{kind:'article',page:'home.html',itemId:'video:family-introduction'}])assert.equal((await handleRequest(request('/collect',event),env,after)).status,400);
+   await cleanup(env,new Date('2026-12-01T00:00:00.000Z'));data=await report(env,after);assert.equal(data.periods.all.videoClicks,3);env.sql.close();
  });
